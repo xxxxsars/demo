@@ -1,0 +1,5 @@
+[database]
+server = 'reui.diskstation.me'
+database = 'master'
+username = ''
+password = ''
