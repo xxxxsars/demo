@@ -75,12 +75,33 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'mssql',
+        'NAME': 'master',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'FreeTDS',
+            'unicode_results': True,
+            'host_is_server': True,
+            'extra_params': 'tds_version=8.0',
+        },
+    },
 }
+
+# set this to False if you want to turn
+
 
 
 # Password validation
