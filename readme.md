@@ -18,3 +18,4 @@ Setup = /usr/lib/arm-linux-gnueabi/odbc/libtdsS.so" >> /etc/odbcinst.ini
 修改/etc/rc.local
 建立起動service
 設定固定IP
+

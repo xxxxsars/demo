@@ -2,37 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RaspBerryPi Demo</title>
+    <title>Raspberry Demo</title>
     <link rel="icon" type="image/png" href="{% static "pic/raspberryPi.png" %}" sizes="96x96">
-
-
+    <link rel="stylesheet" href="{% static "bower_components/admin-lte/dist/css/adminlte.css" %}">
     <link type="text/css" rel="stylesheet" href="{% static "bower_components/boostrap/dist/css/bootstrap.min.css" %}">
     <link type="text/css" rel="stylesheet" href="{% static "bower_components/toastr/toastr.css" %}">
     <link type="text/css" rel="stylesheet" href="{% static "bower_components/semantic/dist/semantic.min.css" %}">
-{#    <link type="text/css" rel="stylesheet"#}
-{#          href="{% static "bower_components/components-font-awesome/css/fontawesome.min.css" %}">#}
-{#    <link type="text/css" rel="stylesheet"#}
-{#          href="{% static "bower_components/components-font-awesome/css/brands.min.css" %}">#}
-{#    <link type="text/css" rel="stylesheet" href="{% static "bower_components/components-font-awesome/css/solid.css" %}">#}
-{##}
-{##}
+    <link type="text/css" rel="stylesheet"
+          href="{% static "bower_components/components-font-awesome/css/fontawesome.min.css" %}">
+    <link type="text/css" rel="stylesheet"
+          href="{% static "bower_components/components-font-awesome/css/brands.min.css" %}">
+    <link type="text/css" rel="stylesheet" href="{% static "bower_components/components-font-awesome/css/solid.css" %}">
+
+
     <script src="{% static "bower_components/jquery/dist/jquery.min.js" %}"></script>
     <script src="{% static "bower_components/boostrap/dist/js/bootstrap.bundle.min.js" %}"></script>
     <script src={% static "bower_components/boostrap/dist/js/bootstrap.min.js" %}></script>
-{#    <script src="{% static "bower_components/toastr/toastr.js" %}"></script>#}
-{#    <script src="{% static "bower_components/admin-lte/dist/js/adminlte.js" %}"></script>#}
-{##}
-{#    <script src="{% static "bower_components/common/handler.js" %}"></script>#}
-
-
+    <script src="{% static "bower_components/toastr/toastr.js" %}"></script>
+    <script src="{% static "bower_components/admin-lte/dist/js/adminlte.js" %}"></script>
 
     {% block src %}
     {% endblock %}
 
 
     <style>
-
-
         input[type=submit] {
             padding: 5px 15px;
             background: #ccc;
@@ -41,28 +34,20 @@
             -webkit-border-radius: 5px;
             border-radius: 5px;
         }
-
         body{
             min-width:1080px;
         }
-
-
-
     </style>
 
 
     <script>
         $(function () {
-
-            var width = screen.width;
-
+            let width = screen.width;
             if (width < 1080) {
                 $("#resolution").addClass("container-fluid")
             } else {
                 $("#resolution").addClass("container")
             }
-
-
         })
     </script>
 
@@ -83,8 +68,8 @@
 <body style=";overflow-x: auto">
 
 
-<nav class="navbar navbar-dark fixed-top bg-secondary">
-    <a class="navbar-brand">RaspberryPi Demo</a>
+<nav class="navbar navbar-dark fixed-top  bg-secondary">
+    <a class="navbar-brand">Raspberry Demo</a>
 </nav>
 
 

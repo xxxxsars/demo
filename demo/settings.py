@@ -11,11 +11,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import platform
 import os
+import configparser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -27,7 +28,6 @@ SECRET_KEY = 'django-insecure--c!yyr6_mk79_stbbp+le1=7lz-mr9jzd@(@pqh08sb-3a3@1c
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -71,37 +71,47 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'master',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '1433',
+if platform.system() == "Windows":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+elif platform.system() == "Linux":
 
-        'OPTIONS': {
-            'driver': 'FreeTDS',
-            'unicode_results': True,
-            'host_is_server': True,
-            'extra_params': 'tds_version=8.0',
+    config = configparser.ConfigParser()
+    config.read(os.path.join(os.path.join(BASE_DIR, "conf"), "config.ini"))
+
+    db = config["database"]
+    server = db["server"]
+    database = db["database"]
+    username = db["username"]
+    password = db["password"]
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mssql',
+            'NAME': database,
+            'USER': username,
+            'PASSWORD': password,
+            'HOST': server,
+            'PORT': '1433',
+
+            'OPTIONS': {
+                'driver': 'FreeTDS',
+                'unicode_results': True,
+                'host_is_server': True,
+                'extra_params': 'tds_version=8.0',
+            },
         },
-    },
-}
+    }
 
 # set this to False if you want to turn
-
 
 
 # Password validation
@@ -122,7 +132,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -136,16 +145,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
 
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
 import mimetypes
+
 mimetypes.add_type("application/javascript", ".js", True)
 
 # Extra places for collectstatic to find static files.
@@ -157,6 +164,3 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-

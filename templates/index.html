@@ -1,25 +1,255 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block src %}
+    <script type="text/javascript" src="{% static "bower_components/webcam/webcam.js" %}"></script>
+{% endblock %}]
+
+
+{% block css %}
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            background: #e8eaed;
+        }
+        div.card {
+            max-width: 550px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        function show_message(element, content) {
+            $(".message-box").each(function () {
+                $(this).find("p").remove();
+            })
+
+            $(".message-box").attr("hidden", true)
+            element.attr("hidden", false)
+            element.find("div.inner").append("<p>" + content + "</p>")
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+        function take_snapshot() {
+            let image;
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                image = data_uri
+            });
+            return image
+        }
+
+        function init(){
+            //webcam initial
+            Webcam.set({
+                width: 576,
+                height: 432,
+
+                // final cropped size
+                crop_width: 460,
+                crop_height: 345,
+
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
+            Webcam.attach('#preview-camera');
+
+            // initial alarm message
+            show_message($("#message"), "Please input production id in the left input box.")
+
+        }
+
+
+        $(function () {
+            init()
+
+            $('#input-id').on("keyup", function (e) {
+                if (e.keyCode == 13) {
+                    let img = take_snapshot();
+                    img = img.replace(/^data:image\/[a-z]+;base64,/, "");
+
+                    let product_id = $(this).val()
+                    if (product_id == '') {
+                        show_message($("#failure"), "Your production id was empty.")
+                        return
+                    }
+
+                    $.ajax({
+                        url: "/api/save_image/", // the endpoint,commonly same url
+                        type: 'POST',
+                        dataType: "json",
+                        contentType: "application/json;charset=utf-8",
+                        timeout: 4000,
+                        data: JSON.stringify({
+                            "csrfmiddlewaretoken": getCookie("csrftoken"),
+                            "image": img,
+                            "product_id": product_id
+                        }),
+
+                        success: function (respText) {
+
+                            let result = (respText["result"])
+                            let img = "data:image/jpeg;base64," + respText["image"]
+                            $("#show-image").html('<img  src="' + img + '"/>');
+
+                            let element = ""
+                            if (result == "success") {
+                                element = $("#success")
+
+                            } else if (result == "failure") {
+                                element = $("#failure")
+                            }
+                            show_message(element, respText["message"])
+                        },
+                        error: function (respText, status) {
+                            let err_msg = "";
+                            if (status == "timeout") {
+                                stopLoading($("#message"), '<div class="inner"><h3>Scan SN</h3><p>Please scan sn in the left input box.</p></div>')
+                                err_msg = "Detection timeout ,please try again."
+                            } else {
+                                err_msg = (respText.responseJSON).message;
+                            }
+                            toastr.error(err_msg, "Generic Error!", {
+                                closeButton: true,
+                                "positionClass": "toast-bottom-right",
+                                "preventDuplicates": false,
+                                "extendedTimeOut": 0,
+                                "tapToDismiss": false
+                            });
+                        },
+                    });
+                    // reset the input box.
+                    $(this).val("")
+
+
+                }
+            })
+
+        })
+    </script>
+
+{% endblock %}
+
+
+
 
 {% block body %}
-
     <div class="row" style="padding-top: 10%">
-        <div class="col">
+        <div class="col-lg-6">
 
+            <div class="col" style="padding-bottom: 30px">
+                <div class="card scroll sample-card">
+                    <h3 class="card-header">Production ID</h3>
 
-            <div class="card scroll sample-card">
-                <h3 class="card-header secondary">Turn ON/OFF LED</h3>
-
-                <div class="card-body">
-
-                    <div class="col text-center">
-                        <button type="button" class="btn btn-success text-center">Turn ON</button>
+                    <div class="card-body">
+                        <input id="input-id" type="text" class="form-control" placeholder="Please input production id">
                     </div>
-
-
                 </div>
             </div>
 
+
+            <div class="col">
+                <div class="card">
+                    <h3 class="card-header">Preview Camera</h3>
+
+
+                    <div class="card-body">
+
+                        <div id="preview-result">
+                            <div style="margin-top: 20px"
+                                 id="preview-camera">
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
+        <div class="col-lg-6">
+            <div class="col" style="padding-bottom: 20px;height: 150px">
+
+
+                <div id="message" class="small-box bg-yellow message-box card">
+                    <div class="inner">
+                        <h3>Input Production ID</h3>
+
+                    </div>
+                </div>
+
+
+                <div id="warning" class="small-box bg-yellow message-box">
+                    <div class="inner">
+                        <h3>WARNING</h3>
+
+                    </div>
+                </div>
+
+
+                <div id="success" class="small-box bg-green message-box" hidden>
+                    <div class="inner">
+                        <h3>Success</h3>
+
+                    </div>
+
+                </div>
+
+                <div id="failure" class="small-box bg-red message-box" hidden>
+                    <div class="inner">
+                        <h3>Failure</h3>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col" style="padding-bottom: 20px">
+                <div class="card scroll sample-card">
+                    <h3 class="card-header">Show Image</h3>
+
+                    <div class="card-body">
+                        <div style="margin-top: 20px"
+                             id="show-image">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
     </div>
+
+
 {% endblock %}

@@ -1,5 +1,7 @@
 import pyodbc
 import configparser
+import os
+from demo.settings import BASE_DIR
 
 class DB:
     def __init__(self, conf_path: str):
@@ -16,21 +18,7 @@ class DB:
 
         conn_str = f'DRIVER=FreeTDS;SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password};TDS_Version=8.0;'
 
-
-
         conn = pyodbc.connect(conn_str,autocommit=True)
-        # # conn = pyodbc.connect(
-        # #     r'DRIVER={ODBC Driver 17 for SQL Server};'
-        # #     r'SERVER=reui.diskstation.me,1433;'
-        # #     r'DATABASE=master;'
-        # #     r'UID=sa;'
-        # #     r'PWD=Zz01470147;'
-        # #     r'Trusted_Connection=yes'
-        # # )
-        #
-        # conn = pyodbc.connect(driver='{ODBC Driver 17 for SQL Server}', host=server, database=db
-        #                     , user=username, password=password)
-
         return conn
 
 
@@ -40,6 +28,15 @@ def read_conf(path: str) -> configparser.ConfigParser:
     return config
 
 
+def path_combine(path,*params):
+    path:str
+    for param in params:
+        path = os.path.join(param)
+
+    return path
+
 if __name__ =="__main__":
-    db = DB("../conf/config.ini")
-    print(db)
+    # db = DB("../conf/config.ini")
+    # print(db)
+
+    print(path_combine(BASE_DIR,"conf","config.ini"))
