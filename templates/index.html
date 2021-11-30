@@ -23,15 +23,6 @@
 {% block js %}
     <script>
 
-        function show_message(element, content) {
-            $(".message-box").each(function () {
-                $(this).find("p").remove();
-            })
-
-            $(".message-box").attr("hidden", true)
-            element.attr("hidden", false)
-            element.find("div.inner").append("<p>" + content + "</p>")
-        }
 
         function getCookie(name) {
             var cookieValue = null;
@@ -74,9 +65,6 @@
             });
             Webcam.attach('#preview-camera');
 
-            // initial alarm message
-            show_message($("#message"), "Please input production id in the left input box.")
-
         }
 
 
@@ -89,8 +77,15 @@
                     img = img.replace(/^data:image\/[a-z]+;base64,/, "");
 
                     let product_id = $(this).val()
+                    console.log(123,product_id)
                     if (product_id == '') {
-                        show_message($("#failure"), "Your production id was empty.")
+                         toastr.error("Your production id was empty.", "Generic Error!", {
+                                closeButton: true,
+                                "positionClass": "toast-bottom-right",
+                                "preventDuplicates": false,
+                                "extendedTimeOut": 0,
+                                "tapToDismiss": false
+                            });
                         return
                     }
 
@@ -107,29 +102,21 @@
                         }),
 
                         success: function (respText) {
-
-                            let result = (respText["result"])
                             let img = "data:image/jpeg;base64," + respText["image"]
                             $("#show-image").html('<img  src="' + img + '"/>');
 
-                            let element = ""
-                            if (result == "success") {
-                                element = $("#success")
+                            toastr.success(respText['message'], "Sucess!", {
+                                closeButton: true,
+                                "positionClass": "toast-bottom-right",
+                                "preventDuplicates": false,
+                                "extendedTimeOut": 0,
+                                "tapToDismiss": false
+                            });
 
-                            } else if (result == "failure") {
-                                element = $("#failure")
-                            }
-                            show_message(element, respText["message"])
+
                         },
                         error: function (respText, status) {
-                            let err_msg = "";
-                            if (status == "timeout") {
-                                stopLoading($("#message"), '<div class="inner"><h3>Scan SN</h3><p>Please scan sn in the left input box.</p></div>')
-                                err_msg = "Detection timeout ,please try again."
-                            } else {
-                                err_msg = (respText.responseJSON).message;
-                            }
-                            toastr.error(err_msg, "Generic Error!", {
+                            toastr.error((respText.responseJSON).message, "Generic Error!", {
                                 closeButton: true,
                                 "positionClass": "toast-bottom-right",
                                 "preventDuplicates": false,
@@ -192,44 +179,6 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="col" style="padding-bottom: 20px;height: 150px">
-
-
-                <div id="message" class="small-box bg-yellow message-box card">
-                    <div class="inner">
-                        <h3>Input Production ID</h3>
-
-                    </div>
-                </div>
-
-
-                <div id="warning" class="small-box bg-yellow message-box">
-                    <div class="inner">
-                        <h3>WARNING</h3>
-
-                    </div>
-                </div>
-
-
-                <div id="success" class="small-box bg-green message-box" hidden>
-                    <div class="inner">
-                        <h3>Success</h3>
-
-                    </div>
-
-                </div>
-
-                <div id="failure" class="small-box bg-red message-box" hidden>
-                    <div class="inner">
-                        <h3>Failure</h3>
-
-
-                    </div>
-
-                </div>
-
-            </div>
-
 
             <div class="col" style="padding-bottom: 20px">
                 <div class="card scroll sample-card">
