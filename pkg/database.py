@@ -1,7 +1,6 @@
 import pyodbc
 import configparser
 import os
-from demo.settings import BASE_DIR
 
 class DB:
     def __init__(self, conf_path: str):
@@ -17,9 +16,14 @@ class DB:
         password = db["password"]
 
         conn_str = f'DRIVER=FreeTDS;SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password};TDS_Version=8.0;'
-
         conn = pyodbc.connect(conn_str,autocommit=True)
         return conn
+
+    def query(self):
+        cursor = self.conn.cursor()
+        cursor.execute("Select * from predict_log")
+        for row in cursor.fetchall():
+            print (row)
 
 
 def read_conf(path: str) -> configparser.ConfigParser:
@@ -36,7 +40,6 @@ def path_combine(path,*params):
     return path
 
 if __name__ =="__main__":
-    # db = DB("../conf/config.ini")
-    # print(db)
+    db = DB("../conf/config.ini")
+    db.query()
 
-    print(path_combine(BASE_DIR,"conf","config.ini"))

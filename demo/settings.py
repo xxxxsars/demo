@@ -105,10 +105,11 @@ elif platform.system() == "Linux":
             'PORT': '1433',
 
             'OPTIONS': {
+
                 'driver': 'FreeTDS',
                 'unicode_results': True,
                 'host_is_server': True,
-                'extra_params': 'tds_version=8.0',
+                'extra_params': 'TDS_VERSION=7.4',
             },
         },
     }
