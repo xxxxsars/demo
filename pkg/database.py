@@ -24,6 +24,9 @@ class DB:
         cursor.execute("Select * from predict_log")
         for row in cursor.fetchall():
             print (row)
+    def delete(self):
+        cursor = self.conn.cursor()
+        cursor.execute("Delete from predict_log")
 
 
 def read_conf(path: str) -> configparser.ConfigParser:
@@ -42,4 +45,5 @@ def path_combine(path,*params):
 if __name__ =="__main__":
     db = DB("../conf/config.ini")
     db.query()
+    #db.delete()
 

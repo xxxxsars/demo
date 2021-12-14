@@ -24,16 +24,29 @@ pip install --no-cache-dir -r requirements.txt
 
 1. Create a new service file.
 ```cmd
+$ vim /lib/systemd/system/website-demo.service 
 
+[Unit]
+Description=Raspberry WebSite Demo
+After= network-online.target
+ 
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/Desktop/demo/manage.py runserver 0.0.0.0:8000
+WorkingDirectory=/home/pi/Desktop/demo
+User = nobody
 ```
 
 2. Linked this file to the systemctl path
-```cmd
 
+```cmd
+ln -fs /lib/systemd/system/website-demo.service /etc/systemd/system/website-demo.service
 ```
+
 3. Register service
 ```cmd
-
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart website-demo.service
+$ sudo systemctl enable website-demo.service
 ```
 
 ### Restful API
