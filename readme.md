@@ -1,6 +1,6 @@
 ### Install ODBC Driver
 
-1. Install dependencies for PyODBC and tds RUN 
+1. Install dependencies for PyODBC and tds 
 
 ```cmd
 $ apt-get install -y tdsodbc unixodbc-dev 
@@ -11,9 +11,10 @@ $ apt-get clean -y
 2. Edit /etc/odbcinst.ini
 ```
 echo "[FreeTDS]
+[FreeTDS]
 Description = FreeTDS unixODBC Driver
-Driver = /usr/lib/arm-linux-gnueabi/odbc/libtdsodbc.so
-Setup = /usr/lib/arm-linux-gnueabi/odbc/libtdsS.so" >> /etc/odbcinst.ini
+Driver = /usr/lib/arm-linux-gnueabihf/odbc/libtdsodbc.so
+Setup = /usr/lib/arm-linux-gnueabihf/odbc/libtdsS.so
 ```
 3. Install requirements (contains pyodbc) 
 ```cmd
