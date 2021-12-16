@@ -21,7 +21,6 @@ def save_image(request):
         product_id = request.data.get("product_id")
 
         try:
-            # TODO save to db
             img_np = base64_to_np(base64_img)
             gray_img = Image.fromarray(cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)).convert("L")
             gray_base64_img = img_to_base64(gray_img).decode("utf-8")

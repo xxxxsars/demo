@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register(r'', PredictLogViewSet, basename='predict_log')
+router.register(r'', PredictLogViewSet, basename='predict')
 
 urlpatterns = [
     url("save_image/$", save_image),
