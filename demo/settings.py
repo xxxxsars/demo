@@ -77,42 +77,42 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-if platform.system() == "Windows":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# if platform.system() == "Windows":
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-elif platform.system() == "Linux":
-
-    config = configparser.ConfigParser()
-    config.read(os.path.join(os.path.join(BASE_DIR, "conf"), "config.ini"))
-
-    db = config["database"]
-    server = db["server"]
-    database = db["database"]
-    username = db["username"]
-    password = db["password"]
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'mssql',
-            'NAME': database,
-            'USER': username,
-            'PASSWORD': password,
-            'HOST': server,
-            'PORT': '1433',
-
-            'OPTIONS': {
-
-                'driver': 'FreeTDS',
-                'unicode_results': True,
-                'host_is_server': True,
-                'extra_params': 'TDS_VERSION=7.4',
-            },
-        },
-    }
+}
+# elif platform.system() == "Linux":
+#
+#     config = configparser.ConfigParser()
+#     config.read(os.path.join(os.path.join(BASE_DIR, "conf"), "config.ini"))
+#
+#     db = config["database"]
+#     server = db["server"]
+#     database = db["database"]
+#     username = db["username"]
+#     password = db["password"]
+#
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'mssql',
+#             'NAME': database,
+#             'USER': username,
+#             'PASSWORD': password,
+#             'HOST': server,
+#             'PORT': '1433',
+#
+#             'OPTIONS': {
+#
+#                 'driver': 'FreeTDS',
+#                 'unicode_results': True,
+#                 'host_is_server': True,
+#                 'extra_params': 'TDS_VERSION=7.4',
+#             },
+#         },
+#     }
 
 # set this to False if you want to turn
 
