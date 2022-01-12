@@ -26,4 +26,4 @@ deploy:
   only:
     - master
   script:
-    - docker run -d  -v $(pwd):/demo  -p 8000:8000 $CI_IMAGE /bin/bash -c /demo/entrypoint.sh
+    - docker run -d  -v $(pwd):/demo  -p 8000:8000 $CI_IMAGE ./entrypoint.sh
