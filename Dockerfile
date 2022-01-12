@@ -12,10 +12,10 @@ RUN echo -e "[FreeTDS]\nDescription = FreeTDS unixODBC Driver\nDriver = /usr/lib
 # Install python package
 #ADD ./* /demo/
 COPY requirements.txt ./
-#WORKDIR /demo
 RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
+WORKDIR /demo
+
 EXPOSE 8000
 
-ENTRYPOINT ["sh", "/demo/entrypoint.sh"]
